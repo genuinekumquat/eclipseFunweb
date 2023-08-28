@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>center/content.jsp</title>
+<title>center/update.jsp</title>
 <link href="css/default.css" rel="stylesheet" type="text/css">
 <link href="css/subpage.css" rel="stylesheet" type="text/css">
 <!--[if lt IE 9]>
@@ -52,45 +52,24 @@ include 액션태그 : 반복되는 화면을 파일로 만들고 파일을 가�
 <!-- 게시판 -->
 <%
 String id = (String)session.getAttribute("id");
-BoardDTO boardDTO = (BoardDTO)request.getAttribute("boardDTO");
+BoardDTO boardDTO=(BoardDTO)request.getAttribute("boardDTO");
 %>
 <article>
-<h1>Content Notice</h1>
+<h1>Update Notice</h1>
+<form action="updatePro.bo" method="post">
+<input type="hidden" name="num" value="<%=boardDTO.getNum()%>">
 <table id="notice">
-<tr><td>글번호</td><td><%=boardDTO.getNum() %></td></tr>
-<tr><td>글쓴이</td><td><%=boardDTO.getName() %></td></tr>
-<tr><td>글쓴날짜</td><td><%=boardDTO.getDate() %></td></tr>
-<tr><td>조회수</td><td><%=boardDTO.getReadcount() %></td></tr>
-<tr><td>제목</td><td><%=boardDTO.getSubject() %></td></tr>
-<tr><td>첨부파일</td>
-    <td><a href="upload/<%=boardDTO.getFile() %>" download>
-        <%=boardDTO.getFile() %></a>
-        <img src="upload/<%=boardDTO.getFile() %>" 
-         width="200" height="200">
-        </td></tr>
-<tr><td>내용</td><td><%=boardDTO.getContent() %></td></tr>    
+<tr><td>글쓴이</td>
+<td><input type="text" name="name" value="<%=id%>" readonly="readonly"></td></tr>
+<tr><td>제목</td>
+    <td><input type="text" name="subject" value="<%=boardDTO.getSubject()%>"></td></tr>
+<tr><td>내용</td>
+<td><textarea rows="10" cols="20" name="content"><%=boardDTO.getContent() %></textarea></td></tr>    
 </table>
 <div id="table_search">
-<%
-// 로그인, 글쓴이 일치
-if(id!=null){
-	if(id.equals(boardDTO.getName())){
-		%>
-<input type="button" value="글수정" class="btn"
-onclick="location.href='update.bo?num=<%=boardDTO.getNum()%>'">
-<input type="button" value="글삭제" class="btn"
-onclick="location.href='delete.bo?num=<%=boardDTO.getNum()%>'">
-<input type="button" value="파일 글수정" class="btn"
-onclick="location.href='fupdate.bo?num=<%=boardDTO.getNum()%>'">
-	
-		<%
-	}
-}
-%>
-<input type="button" value="글목록" class="btn" 
-       onclick="location.href='list.bo'">
+<input type="submit" value="글수정" class="btn">
 </div>
-
+</form>
 
 <div class="clear"></div>
 <div id="page_control">

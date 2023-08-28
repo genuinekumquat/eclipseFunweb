@@ -172,7 +172,74 @@ public class BoardService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}//finsertBoard
+	
+	public void updateBoard(HttpServletRequest request) {
+		System.out.println("BoardService updateBoard()");
+		try {
+			// 한글처리
+			request.setCharacterEncoding("utf-8");
+			// num name subject content 파라미터 값 가져오기
+			int num = Integer.parseInt(request.getParameter("num"));
+			String name = request.getParameter("name");
+			String subject = request.getParameter("subject");
+			String content = request.getParameter("content");
+			// BoardDTO 객체생성
+			BoardDTO boardDTO = new BoardDTO();
+			// set메서드 호출 파라미터값 저장
+			boardDTO.setNum(num);
+			boardDTO.setName(name);
+			boardDTO.setSubject(subject);
+			boardDTO.setContent(content);
+			// BoardDAO 객체생성
+			boardDAO = new BoardDAO();
+			// updateBoard(boardDTO) 메서드호출
+			boardDAO.updateBoard(boardDTO);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}//updateBoard()
+
+	public void fupdateBoard(HttpServletRequest request) {
+		System.out.println("BoardService fupdateBoard()");
+		try {
+			//파일업로드
+			//업로드 파일경로(upload폴더)
+			String uploadPath=request.getRealPath("/upload");
+			int maxSize=10*1024*1024;
+			MultipartRequest multi 
+			= new MultipartRequest(request, uploadPath,maxSize,"utf-8",
+					new DefaultFileRenamePolicy());
+			// num name subject content file oldfile 파라미터 값 가져오기
+			int num = Integer.parseInt(multi.getParameter("num"));
+			String name = multi.getParameter("name");
+			String subject = multi.getParameter("subject");
+			String content = multi.getParameter("content");
+			//file oldfile
+			String file=multi.getFilesystemName("file");
+			//첨부파일 없는 경우
+			if(file == null) {
+				//기존 파일이름 가져오기
+				file = multi.getParameter("oldfile");
+			}
+			
+			// BoardDTO 객체생성
+			BoardDTO boardDTO = new BoardDTO();
+			// set메서드 호출 파라미터값 저장
+			boardDTO.setNum(num);
+			boardDTO.setName(name);
+			boardDTO.setSubject(subject);
+			boardDTO.setContent(content);
+			//파일
+			boardDTO.setFile(file);
+			
+			// BoardDAO 객체생성
+			boardDAO = new BoardDAO();
+			// fupdateBoard(boardDTO) 메서드호출
+			boardDAO.fupdateBoard(boardDTO);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}//fupdateBoard()
 
 }//클래스
-

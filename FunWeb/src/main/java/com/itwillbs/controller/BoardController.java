@@ -150,7 +150,54 @@ public class BoardController extends HttpServlet{
 			response.sendRedirect("list.bo");
 		}
 
+		if(sPath.equals("/update.bo")) {
+			System.out.println("뽑은 가상주소 비교 : /update.bo");
+			// BoardService 객체생성
+			boardService = new BoardService();
+			// BoardDTO boardDTO = getBoard(request) 메서드 호출
+			BoardDTO boardDTO = boardService.getBoard(request);
+			// request에 "boardDTO",boardDTO 담아서
+			request.setAttribute("boardDTO", boardDTO);
+			// center/update.jsp 주소변경없이 이동
+			dispatcher 
+			= request.getRequestDispatcher("center/update.jsp");
+			dispatcher.forward(request, response);
+		}//
 		
-	}//doProcess
+		if(sPath.equals("/updatePro.bo")) {
+			System.out.println("뽑은 가상주소 비교 : /updatePro.bo");
+			// BoardService 객체생성
+			boardService = new BoardService();
+			// updateBoard(request) 메서드 호출
+			boardService.updateBoard(request);
+			// 글목록 list.bo 주소 변경 되면서 이동
+			response.sendRedirect("list.bo");
+		}
+		
+		if(sPath.equals("/fupdate.bo")) {
+			System.out.println("뽑은 가상주소 비교 : /fupdate.bo");
+			// BoardService 객체생성
+			boardService = new BoardService();
+			// BoardDTO boardDTO = getBoard(request) 메서드 호출
+			BoardDTO boardDTO = boardService.getBoard(request);
+			// request에 "boardDTO",boardDTO 담아서
+			request.setAttribute("boardDTO", boardDTO);
+			// center/update.jsp 주소변경없이 이동
+			dispatcher 
+			= request.getRequestDispatcher("center/fupdate.jsp");
+			dispatcher.forward(request, response);
+		}//
+		
+		if(sPath.equals("/fupdatePro.bo")) {
+			System.out.println("뽑은 가상주소 비교 : /fupdatePro.bo");
+			// BoardService 객체생성
+			boardService = new BoardService();
+			// updateBoard(request) 메서드 호출
+			boardService.fupdateBoard(request);
+			// 글목록 list.bo 주소 변경 되면서 이동
+			response.sendRedirect("list.bo");
+		}
+		
+	}//doProcess()
 
 }//클래스

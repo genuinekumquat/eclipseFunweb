@@ -175,7 +175,7 @@ public class BoardDAO {
 			dbClose();
 		}
 		return count;
-	}
+	}// getBoard
 
 	public BoardDTO getBoard(int num) {
 		BoardDTO boardDTO = null;
@@ -210,5 +210,46 @@ public class BoardDAO {
 		return boardDTO;
 	}
 
+	public void updateBoard(BoardDTO boardDTO) {
+		try {
+			//1,2 디비연결
+			con = getConnection();
+//3 sql update board set subject=?, content=? where num=?
+			String sql="update board set subject=?, content=? where num=?";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setString(1, boardDTO.getSubject());
+			pstmt.setString(2, boardDTO.getContent());
+			pstmt.setInt(3, boardDTO.getNum());
+			//4 실행
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			dbClose();
+		}
+	}//updateBoard
+
+	public void fupdateBoard(BoardDTO boardDTO) { 
+		System.out.println("fupdateBoard");
+		try {
+			//1,2 디비연결
+			con = getConnection();
+			//3 sql update board set subject=?, content=? where num=?
+			String sql="update board set subject=?, content=?, file=? where num=?";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setString(1, boardDTO.getSubject());
+			pstmt.setString(2, boardDTO.getContent());
+			pstmt.setString(3, boardDTO.getFile());
+			pstmt.setInt(4, boardDTO.getNum());
+			//4 실행
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			dbClose();
+		}
+	}//fupdateBoard
 
 }//클래스
+
+
