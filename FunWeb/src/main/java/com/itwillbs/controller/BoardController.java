@@ -35,6 +35,8 @@ public class BoardController extends HttpServlet{
 		String sPath = request.getServletPath();
 		System.out.println("뽑아온 가상주소"+sPath);
 		// 주소 비교 => 실제페이지 매핑
+		
+		
 		if(sPath.equals("/list.bo")) {
 			System.out.println("뽑은 가상주소 비교 : /list.bo");
 			// 한 페이지에서 보여지는 글 개수 설정 
@@ -122,6 +124,9 @@ public class BoardController extends HttpServlet{
 			System.out.println("뽑은가상주소비교 :/content.bo");
 			// BoardService 객체생성 
 			boardService = new BoardService();
+			// 조회수 증가 readcount 1증가 
+			// 리턴할형 없음 updateReadcount(request) 메서드 호출 
+			boardService.updateReadcount(request);
 			// BoardDTO boardDTO = getBoard(request) 메서드 호출
 			BoardDTO boardDTO = boardService.getBoard(request);
 			// request에 "boardDTO", boardDTO담아서
@@ -196,7 +201,92 @@ public class BoardController extends HttpServlet{
 			boardService.fupdateBoard(request);
 			// 글목록 list.bo 주소 변경 되면서 이동
 			response.sendRedirect("list.bo");
-		}
+		}// 
+		
+		if(sPath.equals("/delete.bo")) {
+			System.out.println("뽑은 가상주소 비교 : /delete.bo");
+			// BoardService 객체생성
+			boardService = new BoardService();
+			// deleteBoard(request) 메서드 호출
+			boardService.deleteBoard(request);
+			// 글목록 list.bo 주소 변경 되면서 이동
+			response.sendRedirect("list.bo");
+		}// 
+		
+		if(sPath.equals("/listSearch.bo")) {
+			System.out.println("뽑은 가상주소 비교 : /listSearch.bo");
+			// request 한글처리 
+			request.setCharacterEncoding("utf-8");
+			// request 검색어 뽑아오기 
+			String search = request.getParameter("search");
+			// 한 페이지에서 보여지는 글 개수 설정 
+			int pageSize=10;
+			// 페이지번호 
+			String pageNum = request.getParameter("pageNum");
+			// 페이지번호가 없으면 1페이지 설정  
+			 if(pageNum==null) {
+				 pageNum = "1";
+			 }
+			 // 페이지 번호를 정수형으로 변겅 
+			 int currentPage = Integer.parseInt(pageNum);
+			
+			 PageDTO pageDTO = new PageDTO();
+			 pageDTO.setPageSize(pageSize);
+			 pageDTO.setPageNum(pageNum);
+			 pageDTO.setCurrentPage(currentPage);
+			 //검색어 저장
+			 pageDTO.setSearch(search);
+				
+			 
+			//BoardService 객체생성 
+			boardService = new BoardService();
+			// List<BoardDTO>=getBoardList(); 메서드 호출 
+			List<BoardDTO> boardList=boardService.getBoardListSearch(pageDTO);
+			// 게시판 전체 글 개수 구하기 
+			int count = boardService.getBoardCountSearch(pageDTO);
+			// 한화면에 보여줄 페이지개수 설정
+			int pageBlock = 10;
+			// 시작하는 페이지번호
+			// currentPage  pageBlock  => startPage
+			//   1~10(0~9)      10     =>  (0~9)/10*10+1=>0*10+1=> 0+1=> 1 
+			//   11~20(10~19)   10     =>  (10~19)/10*10+1=>1*10+1=>10+1=>11
+			//   21~30(20~29)   10     =>  (20~29)/10*10+1=>2*10+1=>20+1=>21
+			int startPage=(currentPage-1)/pageBlock*pageBlock+1;
+			// 끝나는페이지번호
+			//  startPage   pageBlock => endPage
+			//        1            10          -> 10
+			//       11            10          -> 20
+			//        21            10          -> 30
+			int endPage=startPage+pageBlock-1;
+			// 계산한값  endPage 은 10 실제페이지는 2
+			// 전체페이지 구하기 
+			// 글 개수 50 한 화면에 보여줄 글개수 10 일때 페이지수는 5개 +0
+			// 글 개수 57 한 화면에 보여줄 글개수 10 일때 페이지수는 5개  + 나머지가 있는경우 1페이지를 더함 
+			int pageCount = count/pageSize + (count%pageSize==0?0:1);
+			
+			if(endPage >pageCount) {
+				endPage = pageCount; 
+			}
+			
+			// pageDTO에 저장  
+			pageDTO.setCount(count);
+			pageDTO.setPageBlock(pageBlock);
+			pageDTO.setStartPage(startPage);
+			pageDTO.setStartPage(startPage);
+			pageDTO.setEndPage(endPage);
+			pageDTO.setPageCount(pageCount);
+			// 검색어 저장 
+			pageDTO.setSearch(search);
+			
+			// request에 "boardList",boardList 저장 
+			request.setAttribute("boardList", boardList);
+			request.setAttribute("pageDTO", pageDTO);
+			
+			// 주소변경없이 이동 center/notice.jsp
+			dispatcher 
+			= request.getRequestDispatcher("center/noticeSearch.jsp");
+			dispatcher.forward(request, response);
+		} // 
 		
 	}//doProcess()
 

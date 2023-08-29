@@ -94,6 +94,44 @@ public class BoardDAO {
 		}
 		return boardList;
 	}//getBoardList()
+	
+	public List<BoardDTO> getBoardListSearch(PageDTO pageDTO) {
+		System.out.println("BoardDAO getBoardListSearch()");
+		List<BoardDTO> boardList = null;
+		try {
+			//1,2 연결
+			con = getConnection();
+			//3 sql  => mysql 제공 => limit 시작행-1, 몇개
+//			String sql="select * from board order by num desc";
+			String sql="select * from board where subject like ? order by num desc limit ?, ?";
+			//"select * from board where subject like 검색어 order by num desc limit ?, ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, "%"+pageDTO.getSearch()+"%");  // %+검색어+%
+			pstmt.setInt(2, pageDTO.getStartRow()-1); // 시작행 -1 
+			pstmt.setInt(3, pageDTO.getPageSize());//몇개	
+			//4 실행 => 결과 저장 
+			rs = pstmt.executeQuery();
+			// boardList 객체생성
+			boardList = new ArrayList<>();
+			// 5 결과행접근 -> BoardDTO 객체생성 -> set 호출(열접근저장)			
+			while(rs.next()) {
+				BoardDTO boardDTO = new BoardDTO();
+				boardDTO.setNum(rs.getInt("num"));
+				boardDTO.setName(rs.getString("name"));
+				boardDTO.setSubject(rs.getString("subject"));
+				boardDTO.setContent(rs.getString("content"));
+				boardDTO.setReadcount(rs.getInt("readcount"));
+				boardDTO.setDate(rs.getTimestamp("date"));
+				// -> 배열 한칸에 저장 
+				boardList.add(boardDTO);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			dbClose();
+		}
+		return boardList;
+	}//getBoardListSearch()
 
 	public int getMaxNum() {
 		System.out.println("BoardDAO getMaxNum()");
@@ -176,6 +214,34 @@ public class BoardDAO {
 		}
 		return count;
 	}// getBoard
+	
+	public int getBoardCountSearch(PageDTO pageDTO) {
+		System.out.println("BoardDAO getBoardCountSearch()");
+		int count =0;
+		try {
+			// 1단계 JDBC 프로그램 가져오기 
+			// 2단계 디비 연결
+			con=getConnection();
+			
+			// 3단계 문자열 -> sql구문 변경			// 3 select count(*) from board	
+			// String sql = "select count(*) from board where subject like '%검색어%';";
+			String sql = "select count(*) from board where subject like ?;";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setString(1, "%"+pageDTO.getSearch()+"%");// % + 검색어 + %
+			//4 실행 => 결과저장
+			rs =pstmt.executeQuery();
+		if(rs.next()) {
+			count = rs.getInt("count(*)");
+		}
+			// 실행  -> 결과 저장 
+			// 5결과 행접근 -> 열접근-> count 변수 저장 
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			dbClose();
+		}
+		return count;
+	}// getBoardCountSearch
 
 	public BoardDTO getBoard(int num) {
 		BoardDTO boardDTO = null;
@@ -249,6 +315,41 @@ public class BoardDAO {
 			dbClose();
 		}
 	}//fupdateBoard
+
+	public void deleteBoard(int num) {
+		System.out.println("BoardDAO deleteBoard");
+		try {
+			//1,2 디비연결
+			con = getConnection();
+			//3 sql delete from board where num = ?
+			String sql="delete from board where num=?";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setInt(1,num);
+			//4 실행
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			dbClose();
+		}		
+	}//deleteBoard
+
+	public void updateReadcount(int num) {
+		try {
+			//1,2 디비연결
+			con = getConnection();
+            //3 sql update board set readcount = readcount+1 where num=?
+			String sql="update board set readcount = readcount+1 where num=?";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			//4 실행
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+		dbClose();	
+		}
+	}//updateReadcount
 
 }//클래스
 

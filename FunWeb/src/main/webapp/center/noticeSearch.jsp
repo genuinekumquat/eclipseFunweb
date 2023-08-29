@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>center/noticeSearch.jsp</title>
 <link href="css/default.css" rel="stylesheet" type="text/css">
 <link href="css/subpage.css" rel="stylesheet" type="text/css">
 <!--[if lt IE 9]>
@@ -53,23 +53,24 @@ include 액션태그 : 반복되는 화면을 파일로 만들고 파일을 가�
 <!-- 게시판 -->
 <%
 List<BoardDTO> boardList 
-	= (List<BoardDTO>)request.getAttribute("boardList");
-PageDTO pageDTO = (PageDTO)request.getAttribute("pageDTO");
+    = (List<BoardDTO>)request.getAttribute("boardList");
+
+PageDTO pageDTO=(PageDTO)request.getAttribute("pageDTO");
 %>
 <article>
-<h1>Notice</h1>
+<h1>Notice Search</h1>
 <table id="notice">
 <tr><th class="tno">No.</th>
     <th class="ttitle">Title</th>
     <th class="twrite">Writer</th>
     <th class="tdate">Date</th>
     <th class="tread">Read</th></tr>
-     <%
+    <%
 SimpleDateFormat format =new SimpleDateFormat("yyyy.MM.dd");
     for(int i=0;i<boardList.size();i++){
     	BoardDTO boardDTO=boardList.get(i);
     	%>
-<tr onclick = "location.href='content.bo?num=<%=boardDTO.getNum() %>'">
+<tr onclick="location.href='content.bo?num=<%=boardDTO.getNum()%>'">
     <td><%=boardDTO.getNum() %></td>
     <td class="left"><%=boardDTO.getSubject() %></td>
     <td><%=boardDTO.getName() %></td>
@@ -78,7 +79,6 @@ SimpleDateFormat format =new SimpleDateFormat("yyyy.MM.dd");
     	<%
     }
     %>
-
 </table>
 <%
 String id = (String)session.getAttribute("id");
@@ -88,14 +88,15 @@ if(id != null){
 <input type="button" value="글쓰기" class="btn" 
        onclick="location.href='write.bo'">
 <input type="button" value="파일글쓰기" class="btn" 
-       onclick="location.href='fwrite.bo'">
+       onclick="location.href='fwrite.bo'">       
 </div>	
 	<%
 }
 %>
 
+
 <div id="table_search">
-<form action="listSearch.bo" method ="get">
+<form action="listSearch.bo" method="get">
 <input type="text" name="search" class="input_box">
 <input type="submit" value="search" class="btn">
 </form>
@@ -104,27 +105,28 @@ if(id != null){
 <div class="clear"></div>
 <div id="page_control">
 <%
-// 시작페이지 1페이지 prev 없음 
-// 시작페이지 11,21,31, prev 보임 
+// 시작페이지 1페이지 Prev 없음
+// 시작페이지 11,21,31 Prev 보임
 if(pageDTO.getStartPage() > pageDTO.getPageBlock()){
 	%>
-	<a href = "list.bo?pageNum=<%=pageDTO.getStartPage()-pageDTO.getPageBlock() %>">Prev</a>
+	<a href="listSearch.bo?pageNum=<%=pageDTO.getStartPage()-pageDTO.getPageBlock()%>&search=<%=pageDTO.getSearch()%>">Prev</a>
 	<%
-}	
-%>
+}
+%> 
+
 <%
-for(int i = pageDTO.getStartPage(); i<=pageDTO.getEndPage(); i++){
+for(int i=pageDTO.getStartPage();i<=pageDTO.getEndPage();i++){
 	%>
-	<a href = "list.bo?pageNum=<%=i %>"><%=i %></a>
+	<a href="listSearch.bo?pageNum=<%=i%>&search=<%=pageDTO.getSearch()%>"><%=i %></a> 
 	<%
-}	
-	%>
-	
+}
+%>
+
 <%
 //끝페이지번호  전체페이지수 비교 => 전체페이지수 크면 => Next보임
 if(pageDTO.getEndPage() < pageDTO.getPageCount()){
 	%>
-	<a href="list.bo?pageNum=<%=pageDTO.getStartPage()+pageDTO.getPageBlock()%>">Next</a>
+	<a href="listSearch.bo?pageNum=<%=pageDTO.getStartPage()+pageDTO.getPageBlock()%>&search=<%=pageDTO.getSearch()%>">Next</a>
 	<%
 }
 %>

@@ -13,6 +13,9 @@ public class PageDTO {
 	private int endPage; 
 	private int pageCount;
 	
+	// 검색어 
+	private String search;
+	
 	//alt shift s => v 
 	// 페이징관련은 PageDTO만들어서
 	
@@ -76,5 +79,12 @@ public class PageDTO {
 	public void setCurrentPage(int currentPage) {
 		this.currentPage = currentPage;
 	}
+	public String getSearch() {
+		return search;
+	}
+	public void setSearch(String search) {
+		this.search = search;
+	}
+	
 	
 }

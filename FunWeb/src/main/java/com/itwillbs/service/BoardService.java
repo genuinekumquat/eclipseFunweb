@@ -48,6 +48,41 @@ public class BoardService {
 		}
 		return boardList;
 	}//getBoardList()
+	
+	public List<BoardDTO> getBoardListSearch(PageDTO pageDTO) {
+		System.out.println("BoardService getBoardListSearch()");
+		List<BoardDTO> boardList = null;
+		try {
+			// 시작하는 행부터 10개씩 뽑아오기
+			//  페이지번호    한화면에 보여줄 글 개수 -> 시작하는 행 번호
+			// currentPage           pageSize             -> startRow 
+			//       1                         10               -> (1-1)*10+1 -> 0*10+1 -> 0+1 -> 1             ~10
+			//       2                         10               -> (2-1)*10+1 -> 1*10+1 -> 10+1  -> 11           ~20
+			//       3                         10               -> (3-1)*10+1 -> 2*10+1 -> 20+1  -> 21           ~30 
+						
+			// int startRow = 계산식; 
+			int startRow = (pageDTO.getCurrentPage()-1)*pageDTO.getPageSize()+1;
+			// 시작하는 행	부터 끝나는 행까지 뽑아오기 
+			//startRow           pageSize             -> endRow 
+			//     1                      10               -> 1+10-1 -> 10 
+			//     2                      20               ->11+10-1 -> 20 
+			//     3                      30               -> 21+10-1 -> 30 
+			
+			// int endRow = 계산식;      
+			int endRow = startRow+pageDTO.getPageSize()-1;
+			//pageDTO 저장 <- startRow, endRow
+			pageDTO.setStartRow(startRow);
+			pageDTO.setEndRow(endRow);
+					
+			// BoardDAO 객체생성
+			boardDAO = new BoardDAO();
+			// boardList = getBoardList() 메서드 호출
+			boardList = boardDAO.getBoardListSearch(pageDTO); 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return boardList;
+	}//getBoardListSearch()
 
 	public void insertBoard(HttpServletRequest request) {
 		System.out.println("BoardService insertBoard()");
@@ -91,6 +126,20 @@ public class BoardService {
 			boardDAO = new BoardDAO();
 			// count = getBoardCount() 호출
 			count = boardDAO.getBoardCount();
+		} catch (Exception e) {
+			e.printStackTrace();
+			}
+		return count;
+	}//getBoardCount
+	
+	public int getBoardCountSearch(PageDTO pageDTO) {
+		System.out.println("BoardService getBoardCountSearch()");
+		int count=0;
+		try {
+			// BoardDAO 객체생성 
+			boardDAO = new BoardDAO();
+			// count = getBoardCount() 호출
+			count = boardDAO.getBoardCountSearch(pageDTO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			}
@@ -241,5 +290,40 @@ public class BoardService {
 			e.printStackTrace();
 		}
 	}//fupdateBoard()
+
+	public void deleteBoard(HttpServletRequest request) {
+		System.out.println("BoardService updateBoard()");
+		try {
+			// 한글처리 
+			request.setCharacterEncoding("utf-8");
+			// BoardDAO 객체생성 
+			boardDAO = new BoardDAO();
+			// num 파라미터 값 가져오기
+			int num = Integer.parseInt(request.getParameter("num"));
+			// BoardDAO 객체생성 
+			boardDAO = new BoardDAO();
+			// deleteBoard(num) 메서드 호출 
+			boardDAO.deleteBoard(num);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void updateReadcount(HttpServletRequest request) {
+		System.out.println("BoardService updateReadcount");
+		try {
+			//한글처리
+			request.setCharacterEncoding("utf-8");
+			// num 파라미터값 가져오기 
+			int num = Integer.parseInt(request.getParameter("num"));
+			// BoardDAO 객체생성 
+			boardDAO = new BoardDAO();
+			// updateReadcount(num) 메서드 호출 
+			boardDAO.updateReadcount(num);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
 
 }//클래스
