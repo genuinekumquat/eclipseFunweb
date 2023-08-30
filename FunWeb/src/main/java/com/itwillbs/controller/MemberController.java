@@ -15,7 +15,10 @@ import javax.servlet.http.HttpSession;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import com.itwillbs.domain.BoardDTO;
 import com.itwillbs.domain.MemberDTO;
+import com.itwillbs.domain.PageDTO;
+import com.itwillbs.service.BoardService;
 import com.itwillbs.service.MemberService;
 
 
@@ -23,6 +26,7 @@ public class MemberController extends HttpServlet{
 	
 	RequestDispatcher dispatcher =null;
 	MemberService memberService = null;
+	BoardService boardService = null;
 	
 // HttpServlet 처리담당자 -> 자동으로 doGet, doPost 호출
 	// -> 재정의 해서 사용
@@ -89,6 +93,14 @@ public class MemberController extends HttpServlet{
 	}//	if
 		
 	if(sPath.equals("/main.me")) {
+		PageDTO pageDTO = new PageDTO();
+		pageDTO.setPageSize(5);
+		pageDTO.setCurrentPage(1);
+		boardService = new BoardService();
+		List<BoardDTO> boardList = boardService.getBoardList(pageDTO);
+		
+		request.setAttribute("boardList",boardList);
+		
 		dispatcher 
 	    = request.getRequestDispatcher("main/main.jsp");
 	dispatcher.forward(request, response);

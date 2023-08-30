@@ -1,3 +1,6 @@
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="com.itwillbs.domain.BoardDTO"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -77,16 +80,23 @@ quis ante......</dd>
 <div id="news_notice">
 <h3 class="brown">News &amp; Notice</h3>
 <table>
-<tr><td class="contxt"><a href="#">Vivans....</a></td>
-    <td>2012.11.02</td></tr>
-<tr><td class="contxt"><a href="#">Vivans....</a></td>
-    <td>2012.11.02</td></tr>
-<tr><td class="contxt"><a href="#">Vivans....</a></td>
-    <td>2012.11.02</td></tr>
-<tr><td class="contxt"><a href="#">Vivans....</a></td>
-    <td>2012.11.02</td></tr>
-<tr><td class="contxt"><a href="#">Vivans....</a></td>
-    <td>2012.11.02</td></tr>
+<%
+List<BoardDTO> boardList
+=(List<BoardDTO>)request.getAttribute("boardList");
+
+SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd");
+
+for(int i=0;i<boardList.size();i++){
+	BoardDTO boardDTO=boardList.get(i);
+	%>
+<tr><td class="contxt">
+    <a href="content.bo?num=<%=boardDTO.getNum()%>">
+<%=boardDTO.getSubject() %></a></td>
+  <td><%=format.format(boardDTO.getDate()) %></td></tr>	
+	<%
+}
+%>
+
 </table>
 </div>
 </article>

@@ -127,8 +127,15 @@ public class BoardController extends HttpServlet{
 			// 조회수 증가 readcount 1증가 
 			// 리턴할형 없음 updateReadcount(request) 메서드 호출 
 			boardService.updateReadcount(request);
+			
 			// BoardDTO boardDTO = getBoard(request) 메서드 호출
 			BoardDTO boardDTO = boardService.getBoard(request);
+			
+			// 엔터(\r\n)를 <br>태그로 바꾸기 
+			String content=boardDTO.getContent();
+			content=content.replace("\r\n", "<br>");
+			boardDTO.setContent(content);
+			
 			// request에 "boardDTO", boardDTO담아서
 			request.setAttribute("boardDTO", boardDTO);
 			// center/content.jsp 주소변경없이 이동 
