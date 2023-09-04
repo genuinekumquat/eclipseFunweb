@@ -235,7 +235,7 @@ public class MemberController extends HttpServlet{
 		// memberList -> json 변경해서 출력 
 		// 자바 -> json으로 변경하는 프로그램 설치 (json-simple-1.1.1.jar)
 		
-		// Lsit -> JSONArray 
+		// List -> JSONArray 
 		// import org.json.simple.JSONArray
 		JSONArray arr = new JSONArray();
 		// 날짜 -> 원하는 형으로 문자열 변경 
