@@ -45,6 +45,10 @@
 <%
 MemberDTO memberDTO
      =(MemberDTO)request.getAttribute("memberDTO");
+// EL 표현언어 : 출력, 연산자(empty, null 대신 사용, 
+// 								    	&& and, || or, ! not, ==eq,
+//                                     != ne, <lt, >gt, <=le, >=ge ), 
+//                                     내장객체(sessionScope.id) 제공
 %>
 <article>
 <h1>Update Us</h1>
@@ -53,11 +57,12 @@ MemberDTO memberDTO
 <legend>Basic Info</legend>
 <label>User ID</label>
 <input type="text" name="id" class="id" 
-       value="<%=memberDTO.getId()%>" readonly><br>
+       value="${memberDTO.id}" readonly>
+       <%=memberDTO.getId() %><br>
 <label>Password</label>
 <input type="password" name="pass"><br>
 <label>Name</label>
-<input type="text" name="name" value="<%=memberDTO.getName()%>"><br>
+<input type="text" name="name" value="${memberDTO.name}"><%=memberDTO.getName()%><br>
 <label>E-Mail</label>
 <input type="email" name="email"><br>
 </fieldset>

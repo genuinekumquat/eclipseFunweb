@@ -3,6 +3,9 @@
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -55,20 +58,32 @@ List<MemberDTO> memberList
     <th class="twrite">Pass</th>
     <th class="tdate">Name</th>
     <th class="tread">Date</th></tr>
+
+<!--  for(변수 : 배열) 형태  -->
+<c:forEach var="memberDTO"  items="${memberList}">
+<tr><td>${memberDTO.id}</td>
+    <td>${memberDTO.pass}</td>
+    <td>${memberDTO.name}</td>
+    <td><fmt:formatDate value="${memberDTO.date}"
+             pattern="yyyy.MM.dd"/> </td></tr> 	 
+</c:forEach>    
+    
  <%
  // import="java.text.SimpleDateFormat"
  // 날짜 => 원하는 포맷으로 변경하면 => 문자열 결과 리턴 
- SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd");
- for(int i=0;i<memberList.size();i++){
-	 MemberDTO memberDTO =memberList.get(i);
+//  SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd");
+//  for(int i=0;i<memberList.size();i++){
+// 	 MemberDTO memberDTO =memberList.get(i);
 	 %>
-<tr><td><%=memberDTO.getId() %></td>
-    <td><%=memberDTO.getPass() %></td>
-    <td><%=memberDTO.getName() %></td>
-    <td><%=format.format(memberDTO.getDate()) %></td></tr> 	 
+<tr><td><%//=memberDTO.getId() %></td>
+    <td><%//=memberDTO.getPass() %></td>
+    <td><%//=memberDTO.getName() %></td>
+    <td><%//=format.format(memberDTO.getDate()) %></td></tr> 	 
 	 <%
- }
+ //}
  %>   
+ 
+ 
 
   
 </table>
